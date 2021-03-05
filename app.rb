@@ -13,6 +13,7 @@ get('/showlogin') do
     slim(:"users/login")
 end
 
+
 post('/login') do
     username = params[:username]
     password = params[:password]
@@ -23,10 +24,10 @@ post('/login') do
     id = result["id"]
     
     if BCrypt::Password.new(pwdigest) == password
-      session[:id] = id
-      redirect('/store')
+        session[:id] = id
+        redirect('/store')
     else
-      "YA SCREWED IT UP!"
+        "Wrong password."
     end
 end
 
@@ -34,16 +35,20 @@ post('/users/new') do
     username = params[:username]
     password_confirm = params[:password_confirm]
     password = params[:password]
-
+    
     if (password == password_confirm)
         # lägg till användare
         password_digest = BCrypt::Password.create(password)
         db = SQLite3::Database.new("db/webshop.db")
         db.execute("INSERT INTO users (username,pwdigest) VALUES (?,?)",username,password_digest)
         redirect('/showlogin')
-
+        
     else
         # felhantering
-        "Fel lösenord!"
+        "Password does not match."
     end
+end
+
+get('/store') do
+    slim(:"store/index")
 end

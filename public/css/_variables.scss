@@ -1,0 +1,10 @@
+@mixin center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin reset-mp {
+    margin: 0;
+    padding: 0;
+}
