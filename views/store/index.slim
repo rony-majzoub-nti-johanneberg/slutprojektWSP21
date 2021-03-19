@@ -6,10 +6,45 @@ header
 
 main
     div class="narrow-items"
-        div
-        div
-        div
-        div
+        - items.each do |item|
+            div class="container"
+                div class="background-item"
+                    img = item["image"]
+                h3 = item["name"]
+                h4 = item["price"] + " USD"
+                h4 = item["stock"]
+
+        div class="container"
+            div class="background-item"
+                img
+            h3 Expensive Cat
+            h4 29.99 USD
+            h4 4 left!
+
+        div class="container"
+            div class="background-item"
+                img
+            h3 Expensive Cat
+            h4 29.99 USD
+            h4 4 left!
+
+        div class="container"
+            div class="background-item"
+                img
+            h3 Expensive Cat
+            h4 29.99 USD
+            h4 4 left!
+
     div class="wide-items"
-        div
-        div
+        div class="container"
+            div class="background-item"
+                img
+            h3 Expensive Cat
+            h4 29.99 USD
+            h4 4 left!
+        div class="container"
+            div class="background-item"
+                img
+            h3 Expensive Cat
+            h4 29.99 USD
+            h4 4 left!

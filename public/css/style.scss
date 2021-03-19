@@ -22,6 +22,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    @include reset-mp;
 }
 
 h1 {
@@ -84,7 +85,7 @@ main {
     @include center;
     flex-direction: column;
     margin-top: 5rem;
-    gap: 2rem;
+    gap: 10rem;
 }
 
 .narrow-items {
@@ -92,11 +93,20 @@ main {
     grid-template-columns: repeat(4, 1fr);
     gap: 128px;
     width: 1440px;
-    div {
-        background-color: #EEEEEE;
-        width: 200px;
-        height: 400px;
-        border-radius: 16px;
+    .container {
+        @include center;
+        flex-direction: column;
+        gap: 0.5em;
+        .background-item {
+            background-color: #EEEEEE;
+            width: 200px;
+            height: 400px;
+            border-radius: 16px;
+            margin-bottom: 1em;
+        }
+        h3, h4 {
+            font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
     }
 }
 .wide-items {
@@ -104,10 +114,20 @@ main {
     grid-template-columns: repeat(2, 1fr);
     gap: 128px;
     width: 1440px;
-    div {
-        background-color: #EEEEEE;
-        width: 600px;
-        height: 400px;
-        border-radius: 24px;
+    .container {
+        @include center;
+        flex-direction: column;
+        gap: 0.5em;
+        .background-item {
+            background-color: #EEEEEE;
+            width: 600px;
+            height: 400px;
+            border-radius: 24px;
+            margin-bottom: 1em;
+            
+        }
+        h3, h4 {
+            font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
     }
 }

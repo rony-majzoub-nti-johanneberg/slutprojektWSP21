@@ -50,25 +50,51 @@ post('/users/new') do
 end
 
 get('/store') do
-    slim(:"store/index")
+    db = SQLite3::Database.new("db/webshop.db")
+    result = db.execute("SELECT * FROM items")
+    slim(:"store/index",locals:{items:result})
 end
 
-get('/store/new') do
+get('/upload') do
     slim(:"store/new")
 end
-post('/store/new') do
-    name = params[:name]
-    price = params[:price]
-    stock = params[:stock]
-    filename = params[:image][:filename]
-    file = params[:image][:tempfile]
-    path = "./public/img/#{filename}"
-    File.open(path, 'wb') do |f|
-        f.write(file.read)
+
+post('/upload') do
+    # Check if user uploaded a file
+    if params[:image] && params[:image][:filename]
+        name = params[:name]
+        price = params[:price]
+        stock = params[:stock]
+        filename = params[:image][:filename]
+        file = params[:image][:tempfile]
+        path = "./public/uploads/#{filename}"
+  
+        # Write file to disk
+        File.open(path, 'wb') do |f|
+            f.write(file.read)
+        end
+        db = SQLite3::Database.new("db/webshop.db")
+        result = db.execute("INSERT INTO items (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
+        redirect('/store')
     end
-    path = "img/#{filename}"
-    db.execute("INSERT INTO item (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
 end
+  
+
+#get('/new') do
+#    slim(:"store/new")
+#end
+#post('/new') do
+ #   name = params[:name]
+ #   price = params[:price]
+ #   stock = params[:stock]
+ #   filename = params[:image][:filename]
+ #   file = params[:image][:tempfile]
+ #   path = "./public/uploads/#{filename}"
+  #  File.open(path, 'wb') do |f|
+  #      f.write(file.read)
+ #   end
+ #   db.execute("INSERT INTO item (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
+#end
 
 #post('/upload_item') do
     ##Skapa en sträng med join "./public/img/cat.png"
