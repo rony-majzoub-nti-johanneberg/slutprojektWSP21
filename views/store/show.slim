@@ -1,0 +1,21 @@
+header 
+    div 
+    div 
+    div class="header-left"
+        img src="/img/search.svg" alt=""/
+        img src="/img/cart.svg" alt=""/
+        img src="/img/profile.svg" alt=""/
+    div
+
+main class="selected-front"
+    div class="wide-items"
+        div class="container-horizontal"
+            div class="background-item"
+                img class="product-image" src="/#{result["image_client"]}"
+            div class="selected-text"
+                h3 = result["name"]
+                h4 id="price" = "$#{result["price"]} USD"
+                br
+                br
+                h4 id="stock" = "Stock: #{result["stock"]} left!"
+                input type="submit" value="ADD TO CART" class="button"

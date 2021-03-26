@@ -34,6 +34,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
+  color: rgba(0, 0, 0, 0.87);
 }
 
 h1 {
@@ -42,12 +43,18 @@ h1 {
   font-size: 64px;
   line-height: 24px;
   letter-spacing: 0.1px;
+  padding: 1em 0em;
 }
 
-a {
+.account {
   font-weight: 700;
   color: rgba(0, 0, 0, 0.6);
   text-decoration: none;
+}
+
+a {
+  text-decoration: none;
+  color: unset;
 }
 
 input {
@@ -66,6 +73,36 @@ header {
   width: 100vw;
   top: 0;
   background: rgba(0, 0, 0, 0.05);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+header .header-left {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
+header .header-left img {
+  width: 48px;
+  height: 48px;
+  margin-right: 2rem;
 }
 
 .form-container {
@@ -103,7 +140,7 @@ header {
   background-color: #333333;
 }
 
-main {
+.store-front {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -119,6 +156,19 @@ main {
           flex-direction: column;
   margin-top: 5rem;
   gap: 10rem;
+}
+
+.selected-front {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 8rem;
 }
 
 .narrow-items {
@@ -153,10 +203,33 @@ main {
   height: 400px;
   border-radius: 16px;
   margin-bottom: 1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-.narrow-items .container h3, .narrow-items .container h4 {
+.narrow-items .container .background-item .product-image {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 180px;
+  max-height: 360px;
+  border-radius: 4px;
+}
+
+.narrow-items .container h4 {
   font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+}
+
+.narrow-items .container h3 {
+  font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
 }
 
 .wide-items {
@@ -191,9 +264,109 @@ main {
   height: 400px;
   border-radius: 24px;
   margin-bottom: 1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
-.wide-items .container h3, .wide-items .container h4 {
+.wide-items .container .background-item .product-image {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 580px;
+  max-height: 360px;
+  border-radius: 4px;
+}
+
+.wide-items .container h4 {
   font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+}
+
+.wide-items .container h3 {
+  font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+}
+
+.wide-items .container-horizontal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  gap: 15em;
+}
+
+.wide-items .container-horizontal .background-item {
+  background-color: #EEEEEE;
+  width: 600px;
+  height: 400px;
+  border-radius: 24px;
+  margin-bottom: 1em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.wide-items .container-horizontal .background-item .product-image {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 580px;
+  max-height: 360px;
+  border-radius: 4px;
+}
+
+.wide-items .container-horizontal .selected-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.wide-items .container-horizontal .selected-text .button {
+  margin-top: auto;
+}
+
+.wide-items .container-horizontal h3 {
+  font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+  font-size: 32px;
+  letter-spacing: 3px;
+}
+
+.wide-items .container-horizontal h4 {
+  font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.wide-items .container-horizontal #price {
+  font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: rgba(0, 0, 0, 0.6);
+  margin-top: 1rem;
+  letter-spacing: 2.5px;
+}
+
+.wide-items .container-horizontal #stock {
+  margin-top: 2rem;
 }
 /*# sourceMappingURL=style.css.map */

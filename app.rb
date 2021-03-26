@@ -51,6 +51,7 @@ end
 
 get('/store') do
     db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
     result = db.execute("SELECT * FROM items")
     slim(:"store/index",locals:{items:result})
 end
@@ -68,17 +69,25 @@ post('/upload') do
         filename = params[:image][:filename]
         file = params[:image][:tempfile]
         path = "./public/uploads/#{filename}"
+        img_src = "uploads/#{filename}"
   
         # Write file to disk
         File.open(path, 'wb') do |f|
             f.write(file.read)
         end
         db = SQLite3::Database.new("db/webshop.db")
-        result = db.execute("INSERT INTO items (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
+        db.results_as_hash = true
+        result = db.execute("INSERT INTO items (name,stock,price,image,image_client) VALUES (?,?,?,?,?)",name,stock,price,path,img_src)
         redirect('/store')
     end
 end
-  
+get('/store/:id') do
+    id = params[:id].to_i
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM items WHERE item_id = ?",id).first
+    slim(:"store/show",locals:{result:result})
+  end
 
 #get('/new') do
 #    slim(:"store/new")

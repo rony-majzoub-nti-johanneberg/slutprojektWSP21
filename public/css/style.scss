@@ -23,6 +23,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     @include reset-mp;
+    color: rgba(0, 0, 0, 0.87);
 }
 
 h1 {
@@ -31,12 +32,17 @@ h1 {
     font-size: 64px;
     line-height: 24px;
     letter-spacing: 0.1px;
+    padding: 1em 0em;
 
 }
-a {
+.account {
     font-weight: 700;
     color: rgba(0, 0, 0, 0.6);
     text-decoration: none;
+}
+a {
+    text-decoration: none;
+    color: unset;
 }
 
 input {
@@ -55,6 +61,21 @@ header {
     width: 100vw;
     top: 0;
     background: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    .header-left {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        img {
+            width: 48px;
+            height: 48px;
+            margin-right: 2rem;
+        }
+    }
 }
 
 .form-container {
@@ -81,13 +102,16 @@ header {
     background-color: #333333;
 }
 
-main {
+.store-front {
     @include center;
     flex-direction: column;
     margin-top: 5rem;
     gap: 10rem;
 }
-
+.selected-front {
+    @include center;
+    margin-top: 8rem;
+}
 .narrow-items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -103,9 +127,21 @@ main {
             height: 400px;
             border-radius: 16px;
             margin-bottom: 1em;
+            @include center;
+            .product-image {
+                object-fit: contain;
+                width: 180px;
+                max-height: 360px;
+                border-radius: 4px;
+            }
         }
-        h3, h4 {
+        h4 {
             font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+        }
+        h3 {
+            font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 400;
         }
     }
 }
@@ -124,10 +160,68 @@ main {
             height: 400px;
             border-radius: 24px;
             margin-bottom: 1em;
-            
+            @include center;
+            .product-image {
+                object-fit: contain;
+                width: 580px;
+                max-height: 360px;
+                border-radius: 4px;
+            }
         }
-        h3, h4 {
+        h4 {
             font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+        }
+        h3 {
+            font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 400;
+        }
+    }
+    .container-horizontal {
+        display: flex;
+        flex-direction: row;
+        gap: 15em;
+        .background-item {
+            background-color: #EEEEEE;
+            width: 600px;
+            height: 400px;
+            border-radius: 24px;
+            margin-bottom: 1em;
+            @include center;
+            .product-image {
+                object-fit: contain;
+                width: 580px;
+                max-height: 360px;
+                border-radius: 4px;
+            }
+        }
+        .selected-text {
+            display: flex;
+            flex-flow: column nowrap;
+            width: max-content;
+            .button {
+                margin-top: auto;
+            }
+        }
+        h3 {
+            font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 400;
+            font-size: 32px;
+            letter-spacing: 3px;
+        }
+        h4 {
+            font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+        }
+        #price {
+            font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: rgba(0, 0, 0, 0.6);
+            margin-top: 1rem;
+            letter-spacing: 2.5px;
+        }
+        #stock {
+            margin-top: 2rem;
         }
     }
 }
