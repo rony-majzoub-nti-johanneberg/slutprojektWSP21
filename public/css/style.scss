@@ -231,3 +231,11 @@ header {
         }
     }
 }
+.back-button {
+    align-self: flex-start;
+    margin-left: 10rem;
+    img {
+        width: 64px;
+        height: 64px;
+    }
+}

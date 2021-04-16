@@ -380,4 +380,15 @@ header .header-left img {
 .wide-items .container-horizontal #stock {
   margin-top: 2rem;
 }
+
+.back-button {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  margin-left: 10rem;
+}
+
+.back-button img {
+  width: 64px;
+  height: 64px;
+}
 /*# sourceMappingURL=style.css.map */

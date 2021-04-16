@@ -35,12 +35,13 @@ post('/users/new') do
     username = params[:username]
     password_confirm = params[:password_confirm]
     password = params[:password]
+    wallet = 5000
     
     if (password == password_confirm)
         # lägg till användare
         password_digest = BCrypt::Password.create(password)
         db = SQLite3::Database.new("db/webshop.db")
-        db.execute("INSERT INTO users (username,pwdigest) VALUES (?,?)",username,password_digest)
+        db.execute("INSERT INTO users (username,pwdigest,wallet) VALUES (?,?,?)",username,password_digest,wallet)
         redirect('/showlogin')
         
     else
@@ -54,6 +55,14 @@ get('/store') do
     db.results_as_hash = true
     result = db.execute("SELECT * FROM items")
     slim(:"store/index",locals:{items:result})
+end
+
+post('/store') do
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    # db.execute("SELECT FROM items lalalala")
+    # db.execute("INSERT INTO cart_item lalalala")
+    redirect('/store')
 end
 
 get('/upload') do

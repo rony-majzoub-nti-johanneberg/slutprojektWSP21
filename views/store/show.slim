@@ -7,6 +7,8 @@ header
         img src="/img/profile.svg" alt=""/
     div
 
+a class="back-button" href="/store"
+    img src="/img/back.svg" alt=""/ 
 main class="selected-front"
     div class="wide-items"
         div class="container-horizontal"
@@ -18,4 +20,5 @@ main class="selected-front"
                 br
                 br
                 h4 id="stock" = "Stock: #{result["stock"]} left!"
-                input type="submit" value="ADD TO CART" class="button"
+                form action="/store" method="post" 
+                    input type="submit" value="ADD TO CART" class="button"
