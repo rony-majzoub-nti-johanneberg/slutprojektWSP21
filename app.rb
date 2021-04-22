@@ -77,6 +77,7 @@ post('/upload') do
         stock = params[:stock]
         filename = params[:image][:filename]
         file = params[:image][:tempfile]
+        category = params[:category]
         path = "./public/uploads/#{filename}"
         img_src = "uploads/#{filename}"
   
@@ -87,6 +88,7 @@ post('/upload') do
         db = SQLite3::Database.new("db/webshop.db")
         db.results_as_hash = true
         result = db.execute("INSERT INTO items (name,stock,price,image,image_client) VALUES (?,?,?,?,?)",name,stock,price,path,img_src)
+        # result2 = db.execute("INSERT INTO category (category_name) VALUES (?)",category)
         redirect('/store')
     end
 end

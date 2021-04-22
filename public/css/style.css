@@ -379,6 +379,7 @@ header .header-left img {
 
 .wide-items .container-horizontal #stock {
   margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .back-button {
@@ -390,5 +391,17 @@ header .header-left img {
 .back-button img {
   width: 64px;
   height: 64px;
+}
+
+select {
+  width: 34vw;
+  height: 3vw;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  padding-left: 1em;
+  font-size: 18px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: rgba(0, 0, 0, 0.6);
 }
 /*# sourceMappingURL=style.css.map */

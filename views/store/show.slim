@@ -16,6 +16,7 @@ main class="selected-front"
                 img class="product-image" src="/#{result["image_client"]}"
             div class="selected-text"
                 h3 = result["name"]
+                / h4 id="category" = "$#{result2["category_name"]}"
                 h4 id="price" = "$#{result["price"]} USD"
                 br
                 br
