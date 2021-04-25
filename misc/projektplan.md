@@ -11,4 +11,8 @@ Tänkte göra någon slags webbshop (bra exempel är lttstore.com). Man skall ku
 https://app.creately.com/diagram/18ar9wsUNKW/edit <<-- min personliga länk till filen
 ## 4. Arkitektur (Beskriv filer och mappar - vad gör/innehåller de?).
 
+Inom "app.rb" finns all logik och interaktion med databasen.
 
+Inom "views" finns två mappar, "store" och "users". Inom "users" finns .slim filerna för registrering och inloggning av användare. Inom "store" finns alla .slim filer som har med huvudfunktionen av sidan att göra (webshop). index.slim visar förstasidan av webshoppen, med items från databasen. I new.slim laddar sidans admin upp nya items med varsin namn, bild, lager, kategori och pris. I order.slim visas alla items som man har lagt till i sin varukorg. I show.slim visas en specifik item, baserat på den item_id som det item man klickat på har.
+
+I "public" mappen står alla ikoner ("img"), SCSS ("css"), eventuell JS ("js")  och uppladdade bilder för items ("uploads")
