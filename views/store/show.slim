@@ -1,11 +1,16 @@
 header 
-    div 
-    div 
     div class="header-left"
-        img src="/img/search.svg" alt=""/
-        img src="/img/cart.svg" alt=""/
+        a href="/store" 
+            h2 Webshop
+    div class="header-right"
+        - if session[:id] == 1
+            a href="/upload" 
+                img src="/img/add.svg" alt=""/
+        a href="/order" 
+            img src="/img/cart.svg" alt=""/
         img src="/img/profile.svg" alt=""/
     div
+
 
 a class="back-button" href="/store"
     img src="/img/back.svg" alt=""/ 
@@ -16,10 +21,10 @@ main class="selected-front"
                 img class="product-image" src="/#{result["image_client"]}"
             div class="selected-text"
                 h3 = result["name"]
-                / h4 id="category" = "$#{result2["category_name"]}"
                 h4 id="price" = "$#{result["price"]} USD"
+                h4 id="category" = " Category: #{category["category_name"]}"
                 br
                 br
                 h4 id="stock" = "Stock: #{result["stock"]} left!"
-                form action="/store" method="post" 
+                form action="/store/#{result['item_id']}" method="post" 
                     input type="submit" value="ADD TO CART" class="button"

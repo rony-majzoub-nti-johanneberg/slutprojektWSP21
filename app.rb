@@ -5,6 +5,20 @@ require 'bcrypt'
 
 enable :sessions
 
+# before do
+#     if (session[:id] == nil && ((request.path_info != '/') || (request.path_info != '/showlogin')))
+#         redirect('/showlogin')
+#     end
+# end
+
+# before do 
+#     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+#       redirect("/")
+#     end
+# end
+
+
+
 get ('/') do
     slim(:"users/register")
 end
@@ -27,7 +41,7 @@ post('/login') do
         session[:id] = id
         redirect('/store')
     else
-        "Wrong password."
+        redirect('/showlogin')
     end
 end
 
@@ -57,16 +71,12 @@ get('/store') do
     slim(:"store/index",locals:{items:result})
 end
 
-post('/store') do
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
-    # db.execute("SELECT FROM items lalalala")
-    # db.execute("INSERT INTO cart_item lalalala")
-    redirect('/store')
-end
 
 get('/upload') do
-    slim(:"store/new")
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM category")
+    slim(:"store/new",locals:{category:result})
 end
 
 post('/upload') do
@@ -77,18 +87,23 @@ post('/upload') do
         stock = params[:stock]
         filename = params[:image][:filename]
         file = params[:image][:tempfile]
-        category = params[:category]
+        category_id = params[:category_id].to_i
         path = "./public/uploads/#{filename}"
         img_src = "uploads/#{filename}"
-  
+        
         # Write file to disk
         File.open(path, 'wb') do |f|
             f.write(file.read)
         end
         db = SQLite3::Database.new("db/webshop.db")
         db.results_as_hash = true
+        # Sätter in item egenskaper
         result = db.execute("INSERT INTO items (name,stock,price,image,image_client) VALUES (?,?,?,?,?)",name,stock,price,path,img_src)
-        # result2 = db.execute("INSERT INTO category (category_name) VALUES (?)",category)
+        # Tar det sista item_id från items
+        result2 = db.execute("SELECT * FROM items").last
+        item_id = result2["item_id"].to_i
+        # Sätter in category_id och item_id värden in i item_category_relation
+        result3 = db.execute("INSERT INTO item_category_relation (category_id,item_id) VALUES (?,?)",category_id,item_id)
         redirect('/store')
     end
 end
@@ -97,37 +112,43 @@ get('/store/:id') do
     db = SQLite3::Database.new("db/webshop.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM items WHERE item_id = ?",id).first
-    slim(:"store/show",locals:{result:result})
-  end
+    result2 = db.execute("SELECT * FROM item_category_relation WHERE item_id = ?",id).first
+    category_id = result2["category_id"].to_i
+    result3 = db.execute("SELECT * FROM category WHERE category_id = ?",category_id).first
+    slim(:"store/show",locals:{result:result, category:result3})
+end
+post('/store/:id') do
+    item_id = params[:id].to_i
+    user_id = session[:id]
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM items WHERE item_id = ?",item_id).first
+    name = result["name"]
+    price = result["price"]
+    image = result["image_client"]
+    result2 = db.execute("INSERT INTO order_item (item_name,item_price,item_image) VALUES (?,?,?)",name,price,image)
+    result3 = db.execute("SELECT * FROM order_item").last
+    order_id = result3["order_id"].to_i
+    result4 = db.execute("INSERT INTO order_user_relation (order_id,user_id) VALUES (?,?)",order_id,user_id)
+    redirect('/store')
+end
 
-#get('/new') do
-#    slim(:"store/new")
-#end
-#post('/new') do
- #   name = params[:name]
- #   price = params[:price]
- #   stock = params[:stock]
- #   filename = params[:image][:filename]
- #   file = params[:image][:tempfile]
- #   path = "./public/uploads/#{filename}"
-  #  File.open(path, 'wb') do |f|
-  #      f.write(file.read)
- #   end
- #   db.execute("INSERT INTO item (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
-#end
+get('/order') do
+    user_id = session[:id]
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM order_item INNER JOIN order_user_relation ON order_item.order_id = order_user_relation.order_id WHERE user_id = ?",user_id)
+    slim(:"store/order",locals:{order:result})
+end
 
-#post('/upload_item') do
-    ##Skapa en sträng med join "./public/img/cat.png"
-    #path = File.join("./public/img/",params[:file][:filename])
-    #name = params[:name]
-   # price = params[:price]
-   # stock = params[:stock]
-   # db = SQLite3::Database.new("db/webshop.db")
-   # db.execute("INSERT INTO item (name,stock,price,image) VALUES (?,?,?,?)",name,stock,price,path)
-    
-   # #Spara bilden (skriv innehållet i tempfile till destinationen path)
-   # File.write(path,File.read(params[:file][:tempfile]))
-    
-   # redirect('/upload_item')
-#end
+post('/order') do
+    user_id = session[:id]
+    db = SQLite3::Database.new("db/webshop.db")
+    db.results_as_hash = true
+    result = db.execute("SELECT SUM(item_price) FROM order_item INNER JOIN order_user_relation ON order_item.order_id = order_user_relation.order_id  WHERE user_id = ?",user_id)
+    result2 = db.execute("SELECT wallet FROM users WHERE id = ?",user_id)
+    wallet = result2 - result
+    db.execute("UPDATE users SET wallet = ? WHERE id = ?",wallet,user_id)
+    redirect('/store')
 
+end

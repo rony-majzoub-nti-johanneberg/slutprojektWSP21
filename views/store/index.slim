@@ -1,35 +1,28 @@
 header 
-    div 
-    div 
     div class="header-left"
-        a href="/upload" 
-            img src="img/add.svg" alt=""/
-        img src="img/search.svg" alt=""/
-        img src="img/cart.svg" alt=""/
+        a href="/store" 
+            h2 Webshop
+    div class="header-right"
+        - if session[:id] == 1
+            a href="/upload" 
+                img src="img/add.svg" alt=""/
+        a href="/order" 
+            img src="img/cart.svg" alt=""/
         img src="img/profile.svg" alt=""/
     div
 
 main class="store-front"
-    div class="narrow-items"
-        - items.each do |item|
-            a class="container" href="store/#{item['item_id']}"
-                div class="background-item"
-                    img class="product-image" src="#{item["image_client"]}"
+    - unless items.empty?
+        h1 class="page-title" Welcome to the Webshop!
+        div class="narrow-items"
+            - items.each do |item|
+                a class="container" href="store/#{item['item_id']}"
+                    div class="background-item"
+                        img class="product-image" src="#{item["image_client"]}"
 
-                h3 = item["name"]
-                h4 = "$#{item["price"]} USD"
-                h4 = "#{item["stock"]} left!"
+                    h3 = item["name"]
+                    h4 = "$#{item["price"]} USD"
+                    h4 = "#{item["stock"]} left!"
 
-    / div class="wide-items"
-    /     div class="container"
-    /         div class="background-item"
-    /             img
-    /         h3 Expensive Cat
-    /         h4 29.99 USD
-    /         h4 4 left!
-    /     div class="container"
-    /         div class="background-item"
-    /             img
-    /         h3 Expensive Cat
-    /         h4 29.99 USD
-    /         h4 4 left!
+    - else 
+        h2 There are currently no items being sold right now!
