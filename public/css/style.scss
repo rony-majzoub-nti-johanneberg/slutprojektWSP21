@@ -107,10 +107,14 @@ header {
     letter-spacing: 2.5px;
     text-transform: uppercase;
     box-shadow: $softShadow;
+    transition-duration: 75ms;
+    transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 
 }
 .button:hover {
     background-color: #333333;
+    transition-duration: 75ms;
+    transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 .store-front {

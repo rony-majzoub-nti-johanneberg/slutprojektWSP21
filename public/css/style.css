@@ -154,10 +154,18 @@ header .header-left {
   text-transform: uppercase;
   -webkit-box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
           box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
+  -webkit-transition-duration: 75ms;
+          transition-duration: 75ms;
+  -webkit-transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 .button:hover {
   background-color: #333333;
+  -webkit-transition-duration: 75ms;
+          transition-duration: 75ms;
+  -webkit-transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 .store-front {

@@ -13,7 +13,7 @@ enable :sessions
 
 # before do 
 #     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
-#       redirect("/")
+#       redirect("/showlogin")
 #     end
 # end
 
@@ -65,6 +65,9 @@ post('/users/new') do
 end
 
 get('/store') do
+    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+        redirect("/showlogin")
+    end
     db = SQLite3::Database.new("db/webshop.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM items")
@@ -73,6 +76,9 @@ end
 
 
 get('/upload') do
+    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+        redirect("/showlogin")
+    end
     db = SQLite3::Database.new("db/webshop.db")
     db.results_as_hash = true
     result = db.execute("SELECT * FROM category")
@@ -108,6 +114,9 @@ post('/upload') do
     end
 end
 get('/store/:id') do
+    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+        redirect("/showlogin")
+    end
     id = params[:id].to_i
     db = SQLite3::Database.new("db/webshop.db")
     db.results_as_hash = true
@@ -134,6 +143,9 @@ post('/store/:id') do
 end
 
 get('/order') do
+    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+        redirect("/showlogin")
+    end
     user_id = session[:id]
     db = SQLite3::Database.new("db/webshop.db")
     db.results_as_hash = true
