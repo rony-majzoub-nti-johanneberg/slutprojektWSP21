@@ -1,9 +1,11 @@
 h1 Sign Up
 
 form action="users/new" method="post" class="form-container"
-    input type="text" name="username" placeholder="Username"
-    input type="password" name="password" placeholder="Password"
-    input type="password" name="password_confirm" placeholder="Confirm Password"
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" minlength="4" required>
+    <input type="password" name="password_confirm" placeholder="Confirm Password" minlength="4" required>
     input type="submit" value="SIGN UP" class="button"
 
     a class="account" href="/showlogin" Already have an account?
+    - if session[:error] != nil
+        h3 = session[:error]

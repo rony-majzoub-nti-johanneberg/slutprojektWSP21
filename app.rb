@@ -2,6 +2,7 @@ require 'sinatra'
 require 'slim'
 require 'sqlite3'
 require 'bcrypt'
+require_relative './model.rb'
 
 enable :sessions
 
@@ -20,27 +21,42 @@ enable :sessions
 
 
 get ('/') do
-    slim(:"users/register")
+    if already_logged_in?() == true
+        db = connect_to_db("db/webshop.db")
+        result = db.execute("SELECT * FROM items")
+        slim(:"store/index",locals:{items:result})
+    else
+        # session[:error] = nil
+        slim(:"users/register")
+    end
 end
 
 get('/showlogin') do
-    slim(:"users/login")
+    if already_logged_in?() == true
+        db = connect_to_db("db/webshop.db")
+        result = db.execute("SELECT * FROM items")
+        slim(:"store/index",locals:{items:result})
+    else
+        # session[:error] = nil
+        slim(:"users/login")
+    end
 end
 
 
 post('/login') do
     username = params[:username]
     password = params[:password]
-    db = SQLite3::Database.new('db/webshop.db')
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM users WHERE username = ?",username).first
     pwdigest = result["pwdigest"]
     id = result["id"]
     
     if BCrypt::Password.new(pwdigest) == password
         session[:id] = id
+        session[:username] = username
         redirect('/store')
     else
+        set_error("Password does not match with chosen username.")
         redirect('/showlogin')
     end
 end
@@ -60,16 +76,21 @@ post('/users/new') do
         
     else
         # felhantering
-        "Password does not match."
+        set_error("Passwords do not match.")
+        redirect('/')
     end
+end
+
+get('/logout') do 
+    session.destroy
+    redirect('/showlogin')
 end
 
 get('/store') do
     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
         redirect("/showlogin")
     end
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM items")
     slim(:"store/index",locals:{items:result})
 end
@@ -79,8 +100,7 @@ get('/upload') do
     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
         redirect("/showlogin")
     end
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM category")
     slim(:"store/new",locals:{category:result})
 end
@@ -101,8 +121,7 @@ post('/upload') do
         File.open(path, 'wb') do |f|
             f.write(file.read)
         end
-        db = SQLite3::Database.new("db/webshop.db")
-        db.results_as_hash = true
+        db = connect_to_db("db/webshop.db")
         # Sätter in item egenskaper
         result = db.execute("INSERT INTO items (name,stock,price,image,image_client) VALUES (?,?,?,?,?)",name,stock,price,path,img_src)
         # Tar det sista item_id från items
@@ -118,8 +137,7 @@ get('/store/:id') do
         redirect("/showlogin")
     end
     id = params[:id].to_i
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM items WHERE item_id = ?",id).first
     result2 = db.execute("SELECT * FROM item_category_relation WHERE item_id = ?",id).first
     category_id = result2["category_id"].to_i
@@ -129,8 +147,7 @@ end
 post('/store/:id') do
     item_id = params[:id].to_i
     user_id = session[:id]
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM items WHERE item_id = ?",item_id).first
     name = result["name"]
     price = result["price"]
@@ -141,22 +158,28 @@ post('/store/:id') do
     result4 = db.execute("INSERT INTO order_user_relation (order_id,user_id) VALUES (?,?)",order_id,user_id)
     redirect('/store')
 end
+post('/store/:id/delete') do
+    item_id = params[:id].to_i
+    user_id = session[:id]
+    db = connect_to_db("db/webshop.db")
+    db.execute("DELETE FROM items WHERE item_id = ?",item_id).first
+    db.execute("DELETE FROM item_category_relation WHERE item_id = ?",item_id).first
+    redirect('/store')
+end
 
 get('/order') do
     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
         redirect("/showlogin")
     end
     user_id = session[:id]
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM order_item INNER JOIN order_user_relation ON order_item.order_id = order_user_relation.order_id WHERE user_id = ?",user_id)
     slim(:"store/order",locals:{order:result})
 end
 
 post('/order') do
     user_id = session[:id]
-    db = SQLite3::Database.new("db/webshop.db")
-    db.results_as_hash = true
+    db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT SUM(item_price) FROM order_item INNER JOIN order_user_relation ON order_item.order_id = order_user_relation.order_id  WHERE user_id = ?",user_id)
     result2 = db.execute("SELECT wallet FROM users WHERE id = ?",user_id)
     wallet = result2 - result

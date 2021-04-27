@@ -1,19 +1,10 @@
-header 
-    div class="header-left"
-        a href="/store" 
-            h2 Webshop
-    div class="header-right"
-        - if session[:id] == 1
-            a href="/upload" 
-                img src="/img/add.svg" alt=""/
-        a href="/order" 
-            img src="/img/cart.svg" alt=""/
-        img src="/img/profile.svg" alt=""/
-    div
+div class="button-row"
+    a class="back-button" href="/store"
+        img src="/img/back.svg" alt=""/ 
 
-
-a class="back-button" href="/store"
-    img src="/img/back.svg" alt=""/ 
+    - if session[:id] == 1
+        form action="/store/#{result['item_id']}/delete" method="post" class="delete-button"
+            input type="image" src="/img/delete.svg" alt=""/
 main class="selected-front"
     div class="wide-items"
         div class="container-horizontal"

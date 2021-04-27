@@ -1,17 +1,3 @@
-header 
-    div class="header-left"
-        a href="/store" 
-            h2 Webshop
-    div class="header-right"
-      - if session[:id] == 1
-         a href="/upload" 
-            img src="img/add.svg" alt=""/
-      a href="/order" 
-         img src="img/cart.svg" alt=""/
-      img src="img/profile.svg" alt=""/
-    div
-
-
 - if session[:id] == 1
    h1 Upload Item
 
@@ -21,6 +7,6 @@ header
          - category.each do |category|
             option name="category_id" value="#{category['category_id']}" = category["category_name"]
       input type="text" name="name" placeholder="Name"
-      input type="text" name="stock" placeholder="Amount in Stock"
-      input type="text" name="price" placeholder="Price"
+      input type="number" name="stock" placeholder="Amount in Stock" min="1"
+      input type="number" name="price" placeholder="Price" min="1"
       input type="submit" value="upload" class="button"

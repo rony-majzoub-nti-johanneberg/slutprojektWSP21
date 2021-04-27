@@ -4,6 +4,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 * {
   font-family: 'Roboto', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-transition-duration: 75ms;
+          transition-duration: 75ms;
+  -webkit-transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          transition-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 html {
@@ -30,6 +34,15 @@ body {
   padding: 0;
 }
 
+main {
+  -webkit-animation-name: load;
+          animation-name: load;
+  -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+  -webkit-animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -44,6 +57,12 @@ h1 {
   line-height: 24px;
   letter-spacing: 0.1px;
   padding: 1em 0em;
+  -webkit-animation-name: load;
+          animation-name: load;
+  -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+  -webkit-animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 .account {
@@ -60,12 +79,16 @@ a {
 input {
   width: 33vw;
   height: 3vw;
-  background: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
   border: none;
   padding-left: 1em;
   font-size: 18px;
   line-height: 16px;
   letter-spacing: 0.4px;
+}
+
+input:invalid:required {
+  background-color: rgba(255, 0, 0, 0.1);
 }
 
 header {
@@ -138,6 +161,12 @@ header .header-left {
       -ms-flex-direction: column;
           flex-direction: column;
   gap: 2rem;
+  -webkit-animation-name: load;
+          animation-name: load;
+  -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+  -webkit-animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
 }
 
 .button {
@@ -183,6 +212,7 @@ header .header-left {
       -ms-flex-direction: column;
           flex-direction: column;
   margin-top: 10rem;
+  margin-bottom: 2rem;
 }
 
 .selected-front {
@@ -201,10 +231,10 @@ header .header-left {
 .narrow-items {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[4];
-      grid-template-columns: repeat(4, 1fr);
+  -ms-grid-columns: (minmax(300px, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 128px;
-  width: 1440px;
+  width: 90vw;
 }
 
 .narrow-items .container {
@@ -421,6 +451,38 @@ header .header-left {
   height: 64px;
 }
 
+.delete-button {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  margin-right: 10rem;
+}
+
+.delete-button input {
+  background-color: transparent;
+  width: 64px;
+  height: 64px;
+}
+
+.button-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-animation-name: load;
+          animation-name: load;
+  -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+  -webkit-animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+}
+
 select {
   width: 34vw;
   height: 3vw;
@@ -525,5 +587,113 @@ select {
   line-height: normal;
   font-size: 48px;
   margin-bottom: 5rem;
+  -webkit-animation-name: none;
+          animation-name: none;
+  -webkit-animation-duration: 0;
+          animation-duration: 0;
+  -webkit-animation-timing-function: none;
+          animation-timing-function: none;
+}
+
+.card {
+  background-color: #EEEEEE;
+  border-radius: 0px 0px 8px 8px;
+  width: 300px;
+  height: 200px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  position: absolute;
+  right: 2rem;
+  margin-top: 12px;
+  -webkit-box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
+          box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04);
+}
+
+.card a {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+  margin-right: 3rem;
+}
+
+.card a h4 {
+  font-weight: 500;
+}
+
+details[open] summary ~ * {
+  -webkit-animation-name: sweep;
+          animation-name: sweep;
+  -webkit-animation-duration: 500ms;
+          animation-duration: 500ms;
+  -webkit-animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+          animation-timing-function: cubic-bezier(0.45, 0.1, 0.25, 1);
+}
+
+@-webkit-keyframes sweep {
+  0% {
+    opacity: 0;
+    margin-top: -24px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 12px;
+  }
+}
+
+@keyframes sweep {
+  0% {
+    opacity: 0;
+    margin-top: -24px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 12px;
+  }
+}
+
+@-webkit-keyframes load {
+  0% {
+    opacity: 0;
+    margin-left: -48px;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 0px;
+  }
+}
+
+@keyframes load {
+  0% {
+    opacity: 0;
+    margin-left: -48px;
+  }
+  100% {
+    opacity: 1;
+    margin-left: 0px;
+  }
+}
+
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  cursor: pointer;
 }
 /*# sourceMappingURL=style.css.map */

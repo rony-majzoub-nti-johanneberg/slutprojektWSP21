@@ -1,8 +1,10 @@
 h1 Login
 
 form action="login" method="POST" class="form-container"
-    input type="text" name="username" placeholder="Username"
-    input type="password" name="password" placeholder="Password"
+    <input type="text" name="username" placeholder="Username " required>
+    <input type="password" name="password" placeholder="Password" required>
     input type="submit" value="LOGIN" class="button"
 
     a class="account" href="/" Don't have an account? Create one.
+    - if session[:error] != nil
+        h3 = session[:error]
