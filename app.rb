@@ -21,7 +21,7 @@ enable :sessions
 
 
 get ('/') do
-    if already_logged_in?() == true
+    if already_logged_in() == true
         db = connect_to_db("db/webshop.db")
         result = db.execute("SELECT * FROM items")
         slim(:"store/index",locals:{items:result})
@@ -32,7 +32,7 @@ get ('/') do
 end
 
 get('/showlogin') do
-    if already_logged_in?() == true
+    if already_logged_in() == true
         db = connect_to_db("db/webshop.db")
         result = db.execute("SELECT * FROM items")
         slim(:"store/index",locals:{items:result})
@@ -43,7 +43,7 @@ get('/showlogin') do
 end
 
 
-post('/login') do
+post('/users') do
     username = params[:username]
     password = params[:password]
     db = connect_to_db("db/webshop.db")
@@ -87,7 +87,7 @@ get('/logout') do
 end
 
 get('/store') do
-    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+    if not_logged_in() == true
         redirect("/showlogin")
     end
     db = connect_to_db("db/webshop.db")
@@ -96,16 +96,20 @@ get('/store') do
 end
 
 
-get('/upload') do
-    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+get('/new') do
+    if not_logged_in() == true
         redirect("/showlogin")
     end
-    db = connect_to_db("db/webshop.db")
-    result = db.execute("SELECT * FROM category")
-    slim(:"store/new",locals:{category:result})
+    if is_admin() == true
+        db = connect_to_db("db/webshop.db")
+        result = db.execute("SELECT * FROM category")
+        slim(:"store/new",locals:{category:result})
+    else
+        redirect("/store")
+    end
 end
 
-post('/upload') do
+post('/store') do
     # Check if user uploaded a file
     if params[:image] && params[:image][:filename]
         name = params[:name]
@@ -133,7 +137,7 @@ post('/upload') do
     end
 end
 get('/store/:id') do
-    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+    if not_logged_in() == true
         redirect("/showlogin")
     end
     id = params[:id].to_i
@@ -159,22 +163,26 @@ post('/store/:id') do
     redirect('/store')
 end
 post('/store/:id/delete') do
-    item_id = params[:id].to_i
-    user_id = session[:id]
-    db = connect_to_db("db/webshop.db")
-    db.execute("DELETE FROM items WHERE item_id = ?",item_id).first
-    db.execute("DELETE FROM item_category_relation WHERE item_id = ?",item_id).first
-    redirect('/store')
+    if is_admin() == true
+        item_id = params[:id].to_i
+        user_id = session[:id]
+        db = connect_to_db("db/webshop.db")
+        db.execute("DELETE FROM items WHERE item_id = ?",item_id).first
+        db.execute("DELETE FROM item_category_relation WHERE item_id = ?",item_id).first
+        redirect('/store')
+    else
+        redirect('store/:id')
+    end
 end
 
 get('/order') do
-    if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+    if not_logged_in() == true
         redirect("/showlogin")
     end
     user_id = session[:id]
     db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM order_item INNER JOIN order_user_relation ON order_item.order_id = order_user_relation.order_id WHERE user_id = ?",user_id)
-    slim(:"store/order",locals:{order:result})
+    slim(:"order/index",locals:{order:result})
 end
 
 post('/order') do

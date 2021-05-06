@@ -1,7 +1,7 @@
 - if session[:id] == 1
    h1 Upload Item
 
-   form action="upload" method="post" enctype="multipart/form-data" class="form-container"
+   form action="store" method="post" enctype="multipart/form-data" class="form-container"
       input type="file" name="image"/
       <select name="category_id">
          - category.each do |category|
