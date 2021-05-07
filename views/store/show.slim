@@ -3,6 +3,8 @@ div class="button-row"
         img src="/img/back.svg" alt=""/ 
 
     - if session[:id] == 1
+        form action="/store/#{result['item_id']}/edit" method="post" class="delete-button"
+            input type="image" src="/img/edit.svg" alt=""/
         form action="/store/#{result['item_id']}/delete" method="post" class="delete-button"
             input type="image" src="/img/delete.svg" alt=""/
 main class="selected-front"

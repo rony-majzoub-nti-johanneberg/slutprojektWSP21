@@ -5,10 +5,10 @@ main class="order-list"
             - order.each do |order|
                 a class="container" href="store/#{order['item_id']}"
                     div class="background-item"
-                        img class="product-image" src="#{order["item_image"]}"
+                        img class="product-image" src="#{order["image_client"]}"
 
-                    h3 = order["item_name"]
-                    h4 = "$#{order["item_price"]} USD"
+                    h3 = order["name"]
+                    h4 = "$#{order["price"]} USD"
 
         form action="/order" method="post" 
             input type="submit" value="PURCHASE" class="button"

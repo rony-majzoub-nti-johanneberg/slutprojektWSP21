@@ -22,7 +22,7 @@ end
 
 # Kollar om ingen användare är inloggad just nu.
 def not_logged_in()
-  if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/error')) 
+  if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/users') && (request.path_info != '/users/new'))
     return true
   else
     return false
