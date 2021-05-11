@@ -451,6 +451,11 @@ header .header-left {
   height: 64px;
 }
 
+.edit-button img {
+  width: 64px;
+  height: 64px;
+}
+
 .delete-button {
   -ms-flex-item-align: end;
       align-self: flex-end;
