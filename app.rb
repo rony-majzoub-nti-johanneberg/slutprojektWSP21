@@ -2,7 +2,7 @@ require 'sinatra'
 require 'slim'
 require 'sqlite3'
 require 'bcrypt'
-require_relative '/model/model.rb'
+require_relative 'model.rb'
 
 enable :sessions
 
@@ -50,14 +50,20 @@ end
 #
 # @see Model#user_login
 post('/users') do
-    user_login()
+    username = params[:username]
+    password = params[:password]
+    user_login(username, password)
 end
 
 # Attempts registration of user.
 #
 # @see Model#user_register
 post('/users/new') do
-    user_register()
+    username = params[:username]
+    password_confirm = params[:password_confirm]
+    password = params[:password]
+    wallet = 5000
+    user_register(username, password, password_confirm, wallet)
 end
 
 # Logs out user and destroys the session.
@@ -87,6 +93,7 @@ get('/new') do
         redirect("/store")
     end
 end
+
 # Attempts to upload a new item to the store.
 #
 # @see Model#new_item
@@ -105,11 +112,14 @@ get('/store/:id') do
     result3 = db.execute("SELECT * FROM category WHERE category_id = ?",category_id).first
     slim(:"store/show",locals:{result:result, category:result3})
 end
+
 # Attempts to add a selected item to the user's order list.
 #
 # @see Model#add_item
 post('/store/:id') do
-    add_item()
+    item_id = params[:id].to_i
+    user_id = session[:id]
+    add_item(item_id, user_id)
 end
 
 # Displays Edit Page.
@@ -156,5 +166,6 @@ end
 #
 # @see Model#purchase_order
 post('/order') do
-    purchase_order()
+    user_id = session[:id]
+    purchase_order(user_id)
 end

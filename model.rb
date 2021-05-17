@@ -1,3 +1,4 @@
+# Contains all methods that are used in app.rb.
 module Model
   # Connects to database and returns result as hash.
   #
@@ -10,13 +11,18 @@ module Model
 
   # Checks if the typed username exists in the database.
   #
-  # @param  [String] q The username typed by the user.
-  def name_exist(q)
+  # @param  [String] username The username typed by the user.
+  # @return [Hash]
+  def name_exist(username)
     db = connect_to_db("db/webshop.db")
-    return db.execute("SELECT * FROM users WHERE username = ?",q).first
+    return db.execute("SELECT * FROM users WHERE username = ?",username).first
   end
 
   # Checks if a user is already logged in.
+  #
+  # * :id [Integer] The ID of the user
+  # @return [True] if user is already logged in.
+  # @return [False] if user is not logged in.
   def already_logged_in()
       if session[:id] != nil
         return true
@@ -34,6 +40,10 @@ module Model
   end
 
   # Checks if a user is not currently logged in.
+  #
+  # * :id [Integer] The ID of the user
+  # @return [True] if user is not logged in.
+  # @return [False] if user is logged in.
   def not_logged_in()
     if (session[:id] ==  nil) && (request.path_info != '/') && (request.path_info != '/showlogin' && (request.path_info != '/users') && (request.path_info != '/users/new'))
       return true
@@ -43,6 +53,10 @@ module Model
   end
 
   # Checks if the current session[:id] belongs to the admin.
+  #
+  # * :id [Integer] The ID of the user
+  # @return [True] if user is admin.
+  # @return [False] if user is not an admin.
   def is_admin()
     if session[:id] == 1
       return true
@@ -52,10 +66,12 @@ module Model
   end
 
   # Attempts login and updates the session.
-  def user_login()
-    username = params[:username]
-    password = params[:password]
-    if name_exist(username) != nil
+  #
+  # @param  [String] username The username typed by the user.
+  # @param  [String] password The password typed by the user.
+  def user_login(username, password)
+    if session[:lastlogin] == nil || Time.now - session[:lastlogin] > 10
+      if name_exist(username) != nil
         db = connect_to_db("db/webshop.db")
         result = db.execute("SELECT * FROM users WHERE username = ?",username).first
         pwdigest = result["pwdigest"]
@@ -63,27 +79,35 @@ module Model
         
         # If credentials match the database, let the user proceed.
         if BCrypt::Password.new(pwdigest) == password
-            session[:id] = id
-            session[:username] = username
-            set_error("")
-            redirect('/store')
+          session[:id] = id
+          session[:username] = username
+          set_error("")
+          redirect('/store')
         else
-            # If password does not match, send an error message.
-            set_error("Password does not match with chosen username.")
-            redirect('/showlogin')
+          # If password does not match, send an error message.
+          session[:lastlogin] = Time.now
+          set_error("Password does not match with chosen username.")
+          redirect('/showlogin')
         end
+      else
+          # If the user does not exist, send an error message.
+          session[:lastlogin] = Time.now
+          set_error("Password does not match with chosen username.")
+          redirect('/showlogin')
+      end
     else
-        # If the user does not exist, send an error message.
-        set_error("Password does not match with chosen username.")
-        redirect('/showlogin')
+      # If the user tries to login before the cooldown ends, send an error message.
+      set_error("Please wait before trying again.")
+      redirect('/showlogin')
     end
   end
   # Attempts registration of user.
-  def user_register()
-    username = params[:username]
-    password_confirm = params[:password_confirm]
-    password = params[:password]
-    wallet = 5000
+  #
+  # @param  [String] username The username typed by the user.
+  # @param  [String] password The password typed by the user.
+  # @param  [String] password_confirm The confirmed password typed by the user.
+  # @param  [Integer] wallet The amount of money a user has on the store.
+  def user_register(username, password, password_confirm, wallet)
     if name_exist(username) == nil
 
         if (password == password_confirm)
@@ -106,6 +130,15 @@ module Model
   end
 
   # Attempts to insert a new store-item in the database.
+  #
+  # * :name [String] The chosen name for the item.
+  # * :price [Integer] The chosen price of the item.
+  # * :stock [Integer] The amount of the item that exists.
+  # * :filename [String] The name of the uploaded file.
+  # * :file [String] The name of the tempfile written to disk.
+  # * :category_id [Integer] The chosen category for the uploaded item.
+  # * :path [String] The full path of the uploaded image.
+  # * :img_src String] The limited path of the uploaded image that is shown to users.
   def new_item()
     # Check if user uploaded a file
     if params[:image] && params[:image][:filename] != nil
@@ -138,9 +171,10 @@ module Model
   end
 
   # Attempts to add a selected item to the user's order list.
-  def add_item()
-    item_id = params[:id].to_i
-    user_id = session[:id]
+  #
+  # @param  [Integer] item_id The ID from the selected item.
+  # @param  [Integer] user_id The ID from the current user.
+  def add_item(item_id, user_id)
     db = connect_to_db("db/webshop.db")
     result = db.execute("SELECT * FROM items WHERE item_id = ?",item_id).first
     result2 = db.execute("INSERT INTO order_item_relation (item_id) VALUES (?)",item_id)
@@ -151,6 +185,15 @@ module Model
   end
 
   # Attempts to edit a selected store-item in the database.
+  #
+  # * :name [String] The chosen name for the item.
+  # * :price [Integer] The chosen price of the item.
+  # * :stock [Integer] The amount of the item that exists.
+  # * :filename [String] The name of the uploaded file.
+  # * :file [String] The name of the tempfile written to disk.
+  # * :category_id [Integer] The chosen category for the uploaded item.
+  # * :path [String] The full path of the uploaded image.
+  # * :img_src String] The limited path of the uploaded image that is shown to users.
   def edit_item()
     if is_admin() == true
         # Check if user uploaded a file
@@ -190,6 +233,9 @@ module Model
   end
 
   # Attempts to delete a selected store-item in the database.
+  #
+  # * :item_id [Integer] The ID from the selected item.
+  # * :user_id [Integer] The ID from the current user.
   def delete_item()
     # Only execute if the user is an admin.
     if is_admin() == true
@@ -207,13 +253,12 @@ module Model
       redirect('/store')
     # If the user is not an admin, redirect them back to the item's page.
     else
-        redirect('store/:id')
+      redirect('store/:id')
     end
   end
 
   # Attempts purchase of order.
-  def purchase_order()
-    user_id = session[:id]
+  def purchase_order(user_id)
     db = connect_to_db("db/webshop.db")
     # Subtract the cost of all the items from the user's wallet.
     db.execute("UPDATE users SET wallet = wallet - (SELECT SUM(price) FROM items INNER JOIN order_item_relation ON items.item_id = order_item_relation.item_id INNER JOIN order_user_relation ON order_item_relation.order_id = order_user_relation.order_id WHERE user_id = ?) WHERE id = ?",user_id,user_id)
